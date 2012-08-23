@@ -124,7 +124,7 @@ class BackupMaker:
         # verify file
         fh_verify = tarfile.open(tar_filename_fullpath, "r:gz")
         for tarinfo in fh_verify:
-            if tarinfo.name.endswith('.sql') and tarinfo.size > 0 and tarinfo.isreg():
+            if tarinfo.name.endswith('.sql') and tarinfo.size > 1000 and tarinfo.isreg():
                 pass
             else:
                 fh_verify.close()
