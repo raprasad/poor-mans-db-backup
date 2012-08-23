@@ -109,6 +109,7 @@ class BackupMaker:
         #mode='w:gz'  
         sql_filename = os.path.basename(self.SQL_OUTPUT_FILE_FULLPATH)
         orig_sql_filesize = os.stat(self.SQL_OUTPUT_FILE_FULLPATH)[stat.ST_SIZE]
+        self.log_message( 'sql dump filesize: %s' % orig_sql_filesize)
         
         tar_filename = sql_filename.replace('.sql', '.tar.gz')
 
@@ -125,9 +126,10 @@ class BackupMaker:
             
         # verify file
         fh_verify = tarfile.open(tar_filename_fullpath, "r:gz")
-        for tarinfo in fh_verify:
+        for tarinfo in fh_verify:            
             if tarinfo.isreg() and tarinfo.name == sql_filename and tarinfo.size == orig_sql_filesize:
-                pass
+                self.log_message( 'tar file size: %s' % tarinfo.size)
+                self.log_message( 'tar file name: %s' % tarinfo.name)
             else:
                 fh_verify.close()
                 self.fail_with_message('Tar file NOT verified: %s' % tar_filename_fullpath)
