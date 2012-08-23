@@ -7,7 +7,6 @@ Backup a MySQL database specified in Django:
 # required
 POORMANS_DB_BACKUP_DIR = '(full qualified path to backup directory)
 
-
 """
 import os, sys
 
