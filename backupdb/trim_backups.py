@@ -127,7 +127,7 @@ class BackupTrimmer:
         
         
         for x in range(1, num_dirs+1):
-            earlier_day = self.CURRENT_DATETIME + timedelta(days=x)
+            earlier_day = self.CURRENT_DATETIME + timedelta(days=-x)
             
             new_dirname = BackupMaker.get_backup_subdirectory_name(earlier_day)
             full_new_dirname = os.path.join(self.BACKUP_DIR, new_dirname)
