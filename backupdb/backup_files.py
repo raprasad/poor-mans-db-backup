@@ -26,7 +26,7 @@ if __name__=='__main__':
     setup_environ(settings)
 
 import settings
-    
+import stat
 from django.core.mail import send_mail
 import subprocess # for running mysqldump
 import tarfile
@@ -108,6 +108,8 @@ class BackupMaker:
         
         #mode='w:gz'  
         sql_filename = os.path.basename(self.SQL_OUTPUT_FILE_FULLPATH)
+        orig_sql_filesize = os.stat(self.SQL_OUTPUT_FILE_FULLPATH)[stat.ST_SIZE]
+        
         tar_filename = sql_filename.replace('.sql', '.tar.gz')
 
         tar_filename_fullpath = self.SQL_OUTPUT_FILE_FULLPATH.replace(sql_filename, tar_filename)
@@ -124,12 +126,14 @@ class BackupMaker:
         # verify file
         fh_verify = tarfile.open(tar_filename_fullpath, "r:gz")
         for tarinfo in fh_verify:
-            if tarinfo.name.endswith('.sql') and tarinfo.size > 1000 and tarinfo.isreg():
+            if tarinfo.isreg() and tarinfo.name == sql_filename and tarinfo.size == orig_sql_filesize:
                 pass
             else:
                 fh_verify.close()
                 self.fail_with_message('Tar file NOT verified: %s' % tar_filename_fullpath)
                 return
+        self.log_message('Tar file verified')
+        
         fh_verify.close()
 
         # remove original .sql file
