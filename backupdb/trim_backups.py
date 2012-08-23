@@ -36,7 +36,7 @@ from datetime import datetime, date
 
 class BackupTrimmer:
 
-    def __init__(self):
+    def __init__(self, backup_name=''):
         self.backup_name = backup_name
         self.BACKUP_DIR = getattr(settings, 'POORMANS_DB_BACKUP_DIR', None)
         self.CURRENT_DATETIME = datetime.now()
@@ -60,20 +60,23 @@ class BackupTrimmer:
         self.log_lines.append(m)
     
     def does_dir_match(self, dirname):
-        
+        print '-- match? --'
         if not os.path.isdir(os.path.join(self.BACKUP_DIR, dirname)):
+            print 'not dir'
             return False
     
         pat1 = 'bk_(\d{4}-\d{2}-\d{2})'
         match_obj = re.search('bk_(\d{4}-\d{2}-\d{2})', dirname)
         if match_obj is None:
+            print 'no re match'
             return False
     
         try:
             dir_date = datetime.strptime(item, 'bk_%Y-%m-%d')
         except:    
+            print 'bad date'
             return False
-            
+        print 'ok'
         return True
         #return match_obj.groups()[0]
 
@@ -86,9 +89,10 @@ class BackupTrimmer:
         self.log_message('backup directory: [%s]' % self.BACKUP_DIR)
         if not os.path.isdir(self.BACKUP_DIR):
             self.fail_with_message('POORMANS_DB_BACKUP_DIR directory not found: [%s]' % self.BACKUP_DIR)
-                return
+            return
         
-        ditems = os.path.listdir(self.BACKUP_DIR)
+        ditems = os.listdir(self.BACKUP_DIR)
+        print ditems
         ditems = filter(lambda x: self.does_dir_match(x), ditems)
         ditems.sort()
         if len(ditems) <= 10:
