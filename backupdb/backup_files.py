@@ -117,7 +117,24 @@ class BackupMaker:
         fh_tar.close()          
         self.log_message('Tar file written: %s' % tar_filename_fullpath)
             
-        
+        # verify file
+        fh_verify = tarfile.open(tar_filename_fullpath, "r:gz")
+        for tarinfo in fh_verify:
+            if tarinfo.name.endswith('.sql') and tarinfo.size > 0 and tarinfo.isreg():
+                pass
+            else:
+                fh_verify.close()
+                self.fail_with_message('Tar file NOT verified: %s' % tar_filename_fullpath)
+                return
+        fh_verify.close()
+
+        # remove original .sql file
+        try:
+            os.remove(self.SQL_OUTPUT_FILE_FULLPATH)
+            self.log_message('Original sql file removed: %s' % self.SQL_OUTPUT_FILE_FULLPATH)
+        except:
+            self.fail_with_message('Fail to remove original sql file file: %s' % self.SQL_OUTPUT_FILE_FULLPATH)
+                    
         
     def dump_single_db(self, django_db_name, db_val_dict):
         if not (django_db_name and db_val_dict):
