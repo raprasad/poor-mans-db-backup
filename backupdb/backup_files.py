@@ -44,7 +44,7 @@ class BackupMaker:
         self.log_lines = []
         
     def send_email_notice(self):
-        self.log_message('(4) Send email notice!', header=True))
+        self.log_message('(4) Send email notice!', header=True)
         
         if self.backup_name:
             subject = '%s: database backup report' % self.backup_name
@@ -100,7 +100,7 @@ class BackupMaker:
             self.dump_single_db(django_db_name, db_val_dict)
     
     def compress_the_sql_file(self):
-        self.log_message('(3) compress the SQL file!', header=True))
+        self.log_message('(3) compress the SQL file!', header=True)
         
         if self.SQL_OUTPUT_FILE_FULLPATH is None or not os.path.isfile(self.SQL_OUTPUT_FILE_FULLPATH):
             self.fail_with_message('.sql file not found: [%s]' % fullname)
@@ -192,7 +192,7 @@ class BackupMaker:
 
         
     def check_and_create_directories(self):
-        self.log_message('(1) check_and_create_directories', header=True))
+        self.log_message('(1) check_and_create_directories', header=True)
         if not self.BACKUP_DIR:
             self.fail_with_message('The attribute POORMANS_DB_BACKUP_DIR must be defined in the settings file')
             return
