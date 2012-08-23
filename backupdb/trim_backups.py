@@ -104,14 +104,15 @@ class BackupTrimmer:
             item_fullpath = os.path.join(self.BACKUP_DIR, item)
             try:
                 dir_date = datetime.strptime(item, 'bk_%Y-%m-%d')
-                if dir_date >= self.CURRENT_DATETIME:       # This directory date is in the future, skip it
-                    continue
             except:
                 continue  # to next item
                   
             cnt+=1
             if cnt <= 10:
                 self.log_message('(%s) leaving subdirectory: %s' %  (cnt, item))
+            elif dir_date >= self.CURRENT_DATETIME:       # This directory date is in the future, skip it
+                self.log_message('(%s) subdirectory date in the future? skip it: %s' % (cnt, item) )
+                
             elif dir_date.day in [1, 15]:
                 self.log_message('(%s) leave 1st and 15 of month, leaving subdirectory: %s' %  (cnt, item))
             else:
