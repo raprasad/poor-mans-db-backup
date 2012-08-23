@@ -29,6 +29,7 @@ import settings
     
 from django.core.mail import send_mail
 import subprocess # for running mysqldump
+import tarfile
 from datetime import datetime, date
 
 class BackupMaker:
@@ -39,6 +40,7 @@ class BackupMaker:
         self.CURRENT_DATETIME = datetime.now()
         self.TODAYS_BACKUP_DIR = None
         self.DBS_TO_BACKUP = getattr(settings, 'DATABASES', None)
+        self.SQL_FILENAME_FULLPATH = None
         self.log_lines = []
         
     def send_email_notice(self):
@@ -80,6 +82,7 @@ class BackupMaker:
     def make_backup(self):
         self.check_and_create_directories()
         self.dump_databases()
+        self.compress_the_sql_file()
         self.send_email_notice()
         
     def dump_databases(self):
@@ -93,8 +96,27 @@ class BackupMaker:
             cnt +=1
             self.log_message('(db%s) dump django db "%s"' % (cnt, django_db_name))
             self.dump_single_db(django_db_name, db_val_dict)
+    
+    def compress_the_sql_file(self):
+        if self.SQL_OUTPUT_FILE_FULLPATH is None or not os.path.isfile(self.SQL_OUTPUT_FILE_FULLPATH):
+            self.fail_with_message('.sql file not found: [%s]' % fullname
+            return
+        
+        #mode='w:gz'  
+        sql_filename = os.path.basename(self.SQL_OUTPUT_FILE_FULLPATH)
+        tar_filename = sql_filename.replace('.sql', '.tar.gz')
+
+        tar_filename_fullpath = self.SQL_OUTPUT_FILE_FULLPATH.replace(sql_filename, tar_filename)
+        if not tar_filename_fullpath.endswith('.tar.gz'):
+            self.fail_with_message('Failed to make "tar_filename_fullpath". [%s]' % tar_filename_fullpath)
+            return
             
+        fh_tar = tarfile.open(tar_filename_fullpath, "w:gz")
+        tar.add(self.SQL_OUTPUT_FILE_FULLPATH)
+        tar.close()          
+        self.log_message('Tar file written: %s' % tar_filename_fullpath)
             
+        
     def dump_single_db(self, django_db_name, db_val_dict):
         if not (django_db_name and db_val_dict):
             self.log_message('Django db names or vals not found')
@@ -121,7 +143,8 @@ class BackupMaker:
         
         mysql_output_fname = '%s_dt%s.sql' % (db_val_dict['NAME'], self.CURRENT_DATETIME.strftime('%Y-%m-%d_m%M'))
 
-        mysql_output_fullname = os.path.join(self.TODAYS_BACKUP_DIR, mysql_output_fname)
+        self.SQL_OUTPUT_FILE_FULLPATH = os.path.join(self.TODAYS_BACKUP_DIR, mysql_output_fname)
+        #mysql_output_fullname = os.path.join(self.TODAYS_BACKUP_DIR, mysql_output_fname)
         
         mysql_dump_cmd = 'mysqldump -u%s -p%s -h%s --port=%s --databases %s' % (db_val_dict['USER']\
                 , db_val_dict['PASSWORD'] 
@@ -131,7 +154,7 @@ class BackupMaker:
         self.log_message('mysql statement: [%s]' % mysql_dump_cmd.replace(db_val_dict['PASSWORD'], 'PASSWORD-HERE'))
         
         # open file handler
-        fh = open(mysql_output_fullname, 'w')
+        fh = open(self.SQL_OUTPUT_FILE_FULLPATH, 'w')
         
         try:
             subprocess.check_call(mysql_dump_cmd.split(), stdout=fh)
@@ -142,7 +165,7 @@ class BackupMaker:
 
         # close file
         fh.close()
-        self.log_message('file written: %s' % mysql_output_fullname)
+        self.log_message('file written: %s' % self.SQL_OUTPUT_FILE_FULLPATH)
 
         
     def check_and_create_directories(self):

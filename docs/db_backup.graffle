@@ -51,7 +51,7 @@
 	<array>
 		<dict>
 			<key>Bounds</key>
-			<string>{{102, 100}, {330, 290}}</string>
+			<string>{{117, 99.5}, {330, 290}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -144,7 +144,7 @@ DELETE\
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2012-08-23 14:05:43 +0000</string>
+	<string>2012-08-23 19:57:47 +0000</string>
 	<key>Modifier</key>
 	<string>Raman Prasad</string>
 	<key>NotesVisible</key>
@@ -225,7 +225,7 @@ DELETE\
 			</dict>
 		</array>
 		<key>Frame</key>
-		<string>{{295, 70}, {710, 808}}</string>
+		<string>{{1614, 215}, {988, 841}}</string>
 		<key>ListView</key>
 		<true/>
 		<key>OutlineWidth</key>
@@ -239,14 +239,14 @@ DELETE\
 		<key>SidebarWidth</key>
 		<integer>120</integer>
 		<key>VisibleRegion</key>
-		<string>{{0, 0}, {561, 638}}</string>
+		<string>{{70, 85}, {419.5, 335.5}}</string>
 		<key>Zoom</key>
-		<real>1</real>
+		<real>2</real>
 		<key>ZoomValues</key>
 		<array>
 			<array>
 				<string>Canvas 1</string>
-				<real>1</real>
+				<real>2</real>
 				<real>1</real>
 			</array>
 		</array>
