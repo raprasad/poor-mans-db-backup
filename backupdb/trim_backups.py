@@ -89,7 +89,6 @@ class BackupTrimmer:
             return
         
         ditems = os.listdir(self.BACKUP_DIR)
-        print ditems
         ditems = filter(lambda x: self.does_dir_match(x), ditems)
         ditems.sort()
         ditems.reverse()  # IMPORTANT OR YOU DELETE NEW FILES
