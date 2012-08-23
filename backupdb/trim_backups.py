@@ -113,7 +113,7 @@ class BackupTrimmer:
                 self.log_message('(%s) leave 1st and 15 of month, leaving subdirectory: %s' %  (cnt, item))
             else:
                 shutil.rmtree(item_fullpath)
-                self.log_message('(%s) old subdirectory removed: %s' % item) 
+                self.log_message('(%s) old subdirectory removed: %s' % (cnt, item) )
     
     def make_test_directories(self, num_dirs=17):
         self.log_message('Make %s test directories' % num_dirs, header=True)
@@ -128,11 +128,12 @@ class BackupTrimmer:
             new_dirname = BackupMaker.get_backup_subdirectory_name(earlier_day)
             full_new_dirname = os.path.join(self.BACKUP_DIR, new_dirname)
 
-            if not os.path.isdir(full_new_dirname):
-                os.makedirs(full_new_dirname)
-                self.log_message('(%s) new dir made: %s' % (x, full_new_dirname))
-            else:
+            if os.path.isdir(full_new_dirname):
                 self.log_message('(%s) dir exists: %s' % (x, full_new_dirname))
+                continue
+                
+            os.makedirs(full_new_dirname)
+            self.log_message('(%s) new dir made: %s' % (x, full_new_dirname))
                 
             test_filename = os.path.join(full_new_dirname, 'afile.txt')
             fh = open(test_filename, 'w')
