@@ -77,7 +77,7 @@ class BackupMaker:
     def log_message(self, m, header=False):
 
         if header:
-            m = '%s%s\n' % ('-' * 40, m)
+            m = '%s\n%s\n' % ('-' * 40, m)
         print m
         self.log_lines.append(m)
         
