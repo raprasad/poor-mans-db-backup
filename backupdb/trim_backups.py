@@ -92,6 +92,7 @@ class BackupTrimmer:
         print ditems
         ditems = filter(lambda x: self.does_dir_match(x), ditems)
         ditems.sort()
+        ditems.reverse()  # IMPORTANT OR YOU DELETE NEW FILES
         if len(ditems) <= 10:
             self.log_message('Leaving the last %s backup subdirectories' % len(ditems))
             for item in ditems: 
@@ -103,6 +104,8 @@ class BackupTrimmer:
             item_fullpath = os.path.join(self.BACKUP_DIR, item)
             try:
                 dir_date = datetime.strptime(item, 'bk_%Y-%m-%d')
+                if dir_date >= self.CURRENT_DATETIME:       # This directory date is in the future, skip it
+                    continue
             except:
                 continue  # to next item
                   
