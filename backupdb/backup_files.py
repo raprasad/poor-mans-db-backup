@@ -99,7 +99,7 @@ class BackupMaker:
     
     def compress_the_sql_file(self):
         if self.SQL_OUTPUT_FILE_FULLPATH is None or not os.path.isfile(self.SQL_OUTPUT_FILE_FULLPATH):
-            self.fail_with_message('.sql file not found: [%s]' % fullname
+            self.fail_with_message('.sql file not found: [%s]' % fullname)
             return
         
         #mode='w:gz'  
@@ -110,12 +110,14 @@ class BackupMaker:
         if not tar_filename_fullpath.endswith('.tar.gz'):
             self.fail_with_message('Failed to make "tar_filename_fullpath". [%s]' % tar_filename_fullpath)
             return
-            
+        
+        # Create a tar.gz file
         fh_tar = tarfile.open(tar_filename_fullpath, "w:gz")
-        tar.add(self.SQL_OUTPUT_FILE_FULLPATH)
-        tar.close()          
+        fh_tar.add(self.SQL_OUTPUT_FILE_FULLPATH, arcname=sql_filename)
+        fh_tar.close()          
         self.log_message('Tar file written: %s' % tar_filename_fullpath)
             
+        
         
     def dump_single_db(self, django_db_name, db_val_dict):
         if not (django_db_name and db_val_dict):
@@ -141,7 +143,7 @@ class BackupMaker:
         if not mysql_port:
             mysql_port = '3306'
         
-        mysql_output_fname = '%s_dt%s.sql' % (db_val_dict['NAME'], self.CURRENT_DATETIME.strftime('%Y-%m-%d_m%M'))
+        mysql_output_fname = '%s_dt%s.sql' % (db_val_dict['NAME'], self.CURRENT_DATETIME.strftime('%Y-%m-%d_m%H%M'))
 
         self.SQL_OUTPUT_FILE_FULLPATH = os.path.join(self.TODAYS_BACKUP_DIR, mysql_output_fname)
         #mysql_output_fullname = os.path.join(self.TODAYS_BACKUP_DIR, mysql_output_fname)

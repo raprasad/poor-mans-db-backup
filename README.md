@@ -10,16 +10,16 @@ poor-mans-db-backup
 	
 * Writes mysql dumps to:
      - folder:  POORMANS_DB_BACKUP_DIR/bk_yyyy-mm-dd
-     - file: dbname_dtyyyy-mm-dd-mm_mMM.sql, e.g. trufflesdb_dt2012-08-23_m55.sql
-	 - fullpath, e.g. POORMANS_DB_BACKUP_DIR/bk_2012-08-23/trufflesdb_dt2012-08-23_m55.sql
+     - file: dbname_dtyyyy-mm-dd-mm_mHHMM.sql, e.g. trufflesdb_dt2012-08-23_m1155.sql
+	 - fullpath, e.g. POORMANS_DB_BACKUP_DIR/bk_2012-08-23/trufflesdb_dt2012-08-23_m1155.sql
 
 * tar it up
 
 DELETE
 - read through "backups" directory
-     - backups/bk_yyyy-mm-dd/dbname_yyyy-mm-dd-mm.sql
-                 bk_yyyy-mm-dd/dbname_yyyy-mm-dd-mm.sql
-                 bk_yyyy-mm-dd/dbname_yyyy-mm-dd-mm.sql
+     - backups/bk_yyyy-mm-dd/dbname_yyyy-mm-dd-mm_mHHMM.sql
+                 bk_yyyy-mm-dd/dbname_yyyy-mm-dd-mm_mHHMM.sql
+                 bk_yyyy-mm-dd/dbname_yyyy-mm-dd-mm_mHHMM.sql
 - Check each bk_yyyy-mm-dd name
      - List folders in order of date
      - If one of last 10 folders, keep it
