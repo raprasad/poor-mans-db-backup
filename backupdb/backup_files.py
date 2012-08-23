@@ -42,6 +42,16 @@ class BackupMaker:
         self.SQL_FILENAME_FULLPATH = None
         self.log_lines = []
         
+    @staticmethod
+    def get_backup_subdirectory_name(date_or_datetime_obj):
+        if date_or_datetime_obj is None:
+            return
+        
+        try:
+            return date_or_datetime_obj.strftime('bk_%Y-%m-%d')
+        except:
+            return None
+            
     def send_email_notice(self):
         self.log_message('(4) Send email notice!', header=True)
         
@@ -216,7 +226,11 @@ class BackupMaker:
             self.log_message('directory exists')
         
         # Check for/Create today's backup directory: TODAYS_BACKUP_DIR
-        self.TODAYS_BACKUP_DIR = os.path.join(self.BACKUP_DIR, self.CURRENT_DATETIME.strftime('bk_%Y-%m-%d'))
+        #self.TODAYS_BACKUP_DIR = os.path.join(self.BACKUP_DIR, self.CURRENT_DATETIME.strftime('bk_%Y-%m-%d'))
+        self.TODAYS_BACKUP_DIR = os.path.join(self.BACKUP_DIR\
+                                        , BackupMaker.get_backup_subdirectory_name(self.CURRENT_DATETIME))
+        
+        
         self.log_message('today\'s backup directory: [%s]' % self.TODAYS_BACKUP_DIR)
         if not os.path.isdir(self.TODAYS_BACKUP_DIR):
             try:

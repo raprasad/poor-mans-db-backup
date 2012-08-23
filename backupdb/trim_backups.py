@@ -33,6 +33,7 @@ import re
 from django.core.mail import send_mail
 from datetime import datetime, date
 
+from backupdb.backup_files import BackupMaker
 
 class BackupTrimmer:
 
@@ -60,23 +61,19 @@ class BackupTrimmer:
         self.log_lines.append(m)
     
     def does_dir_match(self, dirname):
-        print '-- match? --'
         if not os.path.isdir(os.path.join(self.BACKUP_DIR, dirname)):
-            print 'not dir'
             return False
     
         pat1 = 'bk_(\d{4}-\d{2}-\d{2})'
         match_obj = re.search('bk_(\d{4}-\d{2}-\d{2})', dirname)
         if match_obj is None:
-            print 'no re match'
             return False
     
         try:
-            dir_date = datetime.strptime(item, 'bk_%Y-%m-%d')
+            dir_date = datetime.strptime(dirname, 'bk_%Y-%m-%d')
         except:    
-            print 'bad date'
             return False
-        print 'ok'
+
         return True
         #return match_obj.groups()[0]
 
@@ -96,7 +93,7 @@ class BackupTrimmer:
         ditems = filter(lambda x: self.does_dir_match(x), ditems)
         ditems.sort()
         if len(ditems) <= 10:
-            self.log_message('Leaving the last %s backup directories' % len(ditems))
+            self.log_message('Leaving the last %s backup subdirectories' % len(ditems))
             for item in ditems: 
                 self.log_message('- %s' % item)
             return
@@ -111,13 +108,36 @@ class BackupTrimmer:
                   
             cnt+=1
             if cnt <= 10:
-                self.log_message('(%s) leaving dir: %s' %  (cnt, item))
+                self.log_message('(%s) leaving subdirectory: %s' %  (cnt, item))
             elif dir_date.day in [1, 15]:
-                self.log_message('(%s) leave 1st and 15 of month, leaving dir: %s' %  (cnt, item))
+                self.log_message('(%s) leave 1st and 15 of month, leaving subdirectory: %s' %  (cnt, item))
             else:
                 shutil.rmtree(item_fullpath)
-                self.log_message('(%s) old directory removed: %s' % item) 
+                self.log_message('(%s) old subdirectory removed: %s' % item) 
+    
+    def make_test_directories(self, num_dirs=17):
+        self.log_message('Make %s test directories' % num_dirs, header=True)
+        if not self.BACKUP_DIR:
+            self.fail_with_message('The attribute POORMANS_DB_BACKUP_DIR must be defined in the settings file')
+            return
+        
+        today = self.CURRENT_DATETIME
+        for x in range(1, num_dirs+1):
+            new_dirname = BackupMaker.get_backup_subdirectory_name(today)
+            full_new_dirname = os.path.join(self.BACKUP_DIR, new_dirname)
+
+            if not os.path.isdir(full_new_dirname):
+                os.makedirs(full_new_dirname)
+                self.log_message('(%s) new dir made: %s' % (x, full_new_dirname))
+            else:
+                self.log_message('(%s) dir exists: %s' % (x, full_new_dirname))
                 
+            test_filename = os.path.join(full_new_dirname, 'afile.txt')
+            fh = open(test_filename, 'w')
+            fh.write('blah')
+            fh.close()    
+            self.log_message('test file: %s' % (test_filename))
+    
 
     def send_email_notice(self):
         self.log_message('Send email notice!', header=True)
