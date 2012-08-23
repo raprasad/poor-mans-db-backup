@@ -31,7 +31,7 @@ import settings
 import shutil
 import re
 from django.core.mail import send_mail
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 from backupdb.backup_files import BackupMaker
 
@@ -121,9 +121,11 @@ class BackupTrimmer:
             self.fail_with_message('The attribute POORMANS_DB_BACKUP_DIR must be defined in the settings file')
             return
         
-        today = self.CURRENT_DATETIME
+        
         for x in range(1, num_dirs+1):
-            new_dirname = BackupMaker.get_backup_subdirectory_name(today)
+            earlier_day = self.CURRENT_DATETIME + timedelta(days=x)
+            
+            new_dirname = BackupMaker.get_backup_subdirectory_name(earlier_day)
             full_new_dirname = os.path.join(self.BACKUP_DIR, new_dirname)
 
             if not os.path.isdir(full_new_dirname):
@@ -137,7 +139,8 @@ class BackupTrimmer:
             fh.write('blah')
             fh.close()    
             self.log_message('test file: %s' % (test_filename))
-    
+        
+            
 
     def send_email_notice(self):
         self.log_message('Send email notice!', header=True)
