@@ -124,6 +124,7 @@ class BackupMaker:
         fh_tar.close()          
         self.log_message('Tar file written: %s' % tar_filename_fullpath)
             
+        self.log_message('(3a) Verify tar file', header=True)
         # verify file
         fh_verify = tarfile.open(tar_filename_fullpath, "r:gz")
         for tarinfo in fh_verify:            
