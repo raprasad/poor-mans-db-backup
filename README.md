@@ -1,33 +1,34 @@
 poor-mans-db-backup
 ===================
 
-# Backup a MySQL database specified in Django:
+* quick back-up scripts with lots of redundant code 
+
+* BACKUP a MySQL database specified in Django: 
+	* (1) mysqldump(s) of database(s) in Django settings file 
+	* (2) gzips .sql file + verifies tar.gz contents match file name and file size
+	* (3) sends email notice to Django admins
+
 * required in settings file:
 	* POORMANS_DB_BACKUP_DIR = '(full qualified path to backup directory)
 
-* Using the django settings file, runs a mysqldump command and emails administrator when done
- 	* pulls db info from settings file
-	
 * Writes mysql dumps to:
-     - folder:  POORMANS_DB_BACKUP_DIR/bk_yyyy-mm-dd
-     - file: dbname_dtyyyy-mm-dd-mm_mHHMM.sql, e.g. trufflesdb_dt2012-08-23_m1155.sql
-	 - fullpath, e.g. POORMANS_DB_BACKUP_DIR/bk_2012-08-23/trufflesdb_dt2012-08-23_m1155.sql
+     - folder:  POORMANS_DB_BACKUP_DIR/bk_YYYY-MM-DD
 
-* tar it up
+     - file: dbname_dtYYYY-MM-DD_mHHMM.sql, e.g. recipedb_dt2012-08-23_m1155.sql
 
-DELETE
-- read through "backups" directory
-     - backups/bk_yyyy-mm-dd/dbname_yyyy-mm-dd-mm_mHHMM.sql
-                 bk_yyyy-mm-dd/dbname_yyyy-mm-dd-mm_mHHMM.sql
-                 bk_yyyy-mm-dd/dbname_yyyy-mm-dd-mm_mHHMM.sql
-- Check each bk_yyyy-mm-dd name
-     - List folders in order of date
-     - If one of last 10 folders, keep it
-     - if day ("dd") is 1, keep it (monthly)
-     - else, delete it
+	 - fullpath, e.g. POORMANS_DB_BACKUP_DIR / bk_2012-08-23 / recipedb_dt2012-08-23_m1155.sql
 
-* settings file specifications:
+* DELETE older back up file 
+- read through "backups" directory specified in POORMANS_DB_BACKUP_DIR
 
-# See "scripts/sample_cron.py" for a script that may run by a cron job
-
-# 
+- rules for deletion
+	- Check each bk_yyyy-mm-dd folder name
+	- Order by date, most recent first
+	- Keep:
+	 	- 10 most recent folders
+		- 1st and 15th of month
+		- If folder date is in the future, ignore it
+	- All others, delete
+	
+* See "scripts/sample_cron.py" for a script that may run by a cron job
+ 
