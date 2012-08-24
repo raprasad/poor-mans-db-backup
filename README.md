@@ -13,8 +13,8 @@ poor-mans-db-backup
 	* POORMANS_DB_BACKUP_DIR = '(full qualified path to backup directory)
 
 * Writes mysql dumps to:
-     * folder:  POORMANS_DB_BACKUP_DIR/bk_YYYY-MM-DD
-     * file: dbname_dtYYYY-MM-DD_mHHMM.sql, e.g. recipedb_dt2012-08-23_m1155.sql
+** folder:  POORMANS_DB_BACKUP_DIR/bk_YYYY-MM-DD
+** file: dbname_dtYYYY-MM-DD_mHHMM.sql, e.g. recipedb_dt2012-08-23_m1155.sql
 ** fullpath, e.g. POORMANS_DB_BACKUP_DIR / bk_2012-08-23 / recipedb_dt2012-08-23_m1155.sql
 
 * DELETE older back up folders and enclosed file(s) 
