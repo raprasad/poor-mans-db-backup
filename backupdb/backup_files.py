@@ -52,13 +52,16 @@ class BackupMaker:
         except:
             return None
             
-    def send_email_notice(self):
+    def send_email_notice(self, has_failed=False):
         self.log_message('(4) Send email notice!', header=True)
         
         if self.backup_name:
             subject = '%s: database backup report' % self.backup_name
         else:
             subject = 'database backup report'
+    
+        if has_failed:
+            subject = 'ERR! %s' % subject
     
         if len(settings.ADMINS)==0:
             print 'No one to email! (no one in settings.ADMINS)'
@@ -80,7 +83,7 @@ class BackupMaker:
     def fail_with_message(self, m):
         self.log_message('\nFAIL MESSAGE')
         self.log_message(m)
-        self.send_email_notice()
+        self.send_email_notice(has_failed=True)
         sys.exit(0)
     
     def log_message(self, m, header=False):
@@ -190,7 +193,10 @@ class BackupMaker:
                 , mysql_host
                 , mysql_port 
                 , db_val_dict['NAME'] )
-        self.log_message('mysql statement: [%s]' % mysql_dump_cmd.replace(db_val_dict['PASSWORD'], 'PASSWORD-HERE'))
+                
+        self.log_message('db_name: [%s] host: [%s]  port: [%s]' % (db_val_dict['NAME'], mysql_host, mysql_port ))
+        
+        #self.log_message('mysql statement: [%s]' % mysql_dump_cmd.replace(db_val_dict['PASSWORD'], 'PASSWORD-HERE'))
         
         # open file handler
         fh = open(self.SQL_OUTPUT_FILE_FULLPATH, 'w')
