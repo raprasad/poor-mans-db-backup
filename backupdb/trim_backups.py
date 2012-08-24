@@ -50,7 +50,7 @@ class BackupTrimmer:
     def fail_with_message(self, m):
         self.log_message('\nFAIL MESSAGE')
         self.log_message(m)
-        self.send_email_notice()
+        self.send_email_notice(has_failed=True)
         sys.exit(0)
 
     def log_message(self, m, header=False):
@@ -146,7 +146,7 @@ class BackupTrimmer:
         
             
 
-    def send_email_notice(self):
+    def send_email_notice(self, has_failed=False):
         self.log_message('Send email notice!', header=True)
 
         if self.backup_name:
@@ -154,6 +154,11 @@ class BackupTrimmer:
         else:
             subject = 'Trim backup report'
 
+        if has_failed:
+            subject = '(ERR!) %s' % subject
+        else:
+            subject = '(ok) %s' % subject
+            
         if len(settings.ADMINS)==0:
             print 'No one to email! (no one in settings.ADMINS)'
             return

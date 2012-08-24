@@ -60,9 +60,12 @@ class BackupMaker:
         else:
             subject = 'database backup report'
     
+
         if has_failed:
-            subject = 'ERR! %s' % subject
-    
+            subject = '(ERR!) %s' % subject
+        else:
+            subject = '(ok) %s' % subject
+
         if len(settings.ADMINS)==0:
             print 'No one to email! (no one in settings.ADMINS)'
             return
