@@ -8,17 +8,16 @@ poor-mans-db-backup
 	* (2) gzips .sql file + verifies tar.gz contents match file name and file size
 	* (3) sends email notice to Django admins
 
+
 * required in settings file:
 	* POORMANS_DB_BACKUP_DIR = '(full qualified path to backup directory)
 
 * Writes mysql dumps to:
-     - folder:  POORMANS_DB_BACKUP_DIR/bk_YYYY-MM-DD
+     * folder:  POORMANS_DB_BACKUP_DIR/bk_YYYY-MM-DD
+     * file: dbname_dtYYYY-MM-DD_mHHMM.sql, e.g. recipedb_dt2012-08-23_m1155.sql
+** fullpath, e.g. POORMANS_DB_BACKUP_DIR / bk_2012-08-23 / recipedb_dt2012-08-23_m1155.sql
 
-     - file: dbname_dtYYYY-MM-DD_mHHMM.sql, e.g. recipedb_dt2012-08-23_m1155.sql
-
-	 - fullpath, e.g. POORMANS_DB_BACKUP_DIR / bk_2012-08-23 / recipedb_dt2012-08-23_m1155.sql
-
-* DELETE older back up file 
+* DELETE older back up folders and enclosed file(s) 
 - read through "backups" directory specified in POORMANS_DB_BACKUP_DIR
 
 - rules for deletion
