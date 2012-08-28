@@ -140,7 +140,8 @@ class BackupMaker:
         
         tar_filesize = os.stat(tar_filename_fullpath)[stat.ST_SIZE]
         
-        self.log_message('Tar file written: [%s] size [%s]' % (tar_filename_fullpath, tar_filesize))
+        self.log_message('Tar file written: [%s]' % (tar_filename_fullpath))
+        self.log_message('Tar file size:  [%s]' % (tar_filesize))
 
         self.log_message('(3a) Verify tar file', header=True)
         # verify file
