@@ -137,15 +137,18 @@ class BackupMaker:
         fh_tar = tarfile.open(tar_filename_fullpath, "w:gz")
         fh_tar.add(self.SQL_OUTPUT_FILE_FULLPATH, arcname=sql_filename)
         fh_tar.close()          
-        self.log_message('Tar file written: %s' % tar_filename_fullpath)
-            
+        
+        tar_filesize = os.stat(tar_filename_fullpath)[stat.ST_SIZE]
+        
+        self.log_message('Tar file written: [%s] size [%s]' % (tar_filename_fullpath, tar_filesize))
+
         self.log_message('(3a) Verify tar file', header=True)
         # verify file
         fh_verify = tarfile.open(tar_filename_fullpath, "r:gz")
         for tarinfo in fh_verify:            
             if tarinfo.isreg() and tarinfo.name == sql_filename and tarinfo.size == orig_sql_filesize:
-                self.log_message( 'tar file size: %s' % tarinfo.size)
                 self.log_message( 'tar file name: %s' % tarinfo.name)
+                self.log_message( 'tar meta-data size: %s' % tarinfo.size)
             else:
                 fh_verify.close()
                 self.fail_with_message('Tar file NOT verified: %s' % tar_filename_fullpath)
