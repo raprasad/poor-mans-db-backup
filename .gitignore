@@ -2,3 +2,6 @@
 *.pot
 *.pyc
 local_settings.py
+retrieved/*
+scripts/scp_db_mcb_files.py*
+.DS_Store
