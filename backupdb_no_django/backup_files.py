@@ -9,29 +9,8 @@ import smtplib
 from email.mime.text import MIMEText
 from datetime import datetime, date
 
-class DatabaseBackupSpecs:
-    
-    attr_names_defaults = { 'BACKUP_DIRECTORY' : None\
-                            , 'MYSQL_HOST' : 'localhost'\
-                            , 'MYSQL_PORT' : '3306'\
-                            , 'DB_NAME' : None\
-                            , 'DB_USER' : None\
-                            , 'DB_PASSWORD' : None\
-                            , 'EMAIL_HOST' : 'localhost'\
-                            , 'NOTIFICATION_EMAIL_ADDRESSES' : []\
-                            }
-    
-    def __init__(self, **kwargs):
-        # Load attribute names
-        print kwargs
-        for attr_name, default_val in self.attr_names_defaults.iteritems():
-            kwarg_val = kwargs.get(attr_name, default_val)
-            print attr_name, kwarg_val
-            if kwarg_val is None:
-                raise Exception('DatabaseBackupSpecs: Value for "%s" not specified!' % attr_name)
-            self.__dict__.update({ attr_name : kwarg_val })
-            
-       
+from db_backup_specs import DatabaseBackupSpecs
+
 
 class BackupMaker:
 
@@ -56,7 +35,7 @@ class BackupMaker:
         self.log_message('(4) Send email notice!', header=True)
         
        
-        subject = '%s database backup report' % self.backup_specs.DB_NAME
+        subject = '%s database backup report' % self.backup_specs.BACKUP_NAME
 
         if has_failed:
             subject = '(Error!) %s' % subject
@@ -85,14 +64,7 @@ class BackupMaker:
                     , email_msg_obj['To']\
                     , email_msg_obj.as_string())
         s.quit()
-        """
-        
-        
-        from_email = to_addresses[0]
-        
-        send_mail(subject, email_msg, from_email, to_addresses, fail_silently=False)
-        
-        """
+    
         self.log_message('email sent to: %s' % to_addresses)
             
             
