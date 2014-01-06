@@ -1,21 +1,12 @@
 """
 remove MySQL database backups:
 
------------------------------
-> settings file specifications:
------------------------------
-# required
-DB_BACKUP_DIR = '(full qualified path to backup directory)
-
-removes old directories with format:
-DB_BACKUP_DIR/bk_YYYY-MM-DD'
-
+use a DatabaseBackupSpecs object as specified in 'db_backup_specs.py'
 """
 import os, sys
 
 import shutil
 import re
-from django.core.mail import send_mail
 from datetime import datetime, date, timedelta
 
 import smtplib
