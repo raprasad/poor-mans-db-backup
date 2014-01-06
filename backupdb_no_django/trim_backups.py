@@ -167,11 +167,18 @@ class BackupTrimmer:
 if __name__=='__main__':
     from my_db_specs import db_specs
     db_backup_specs = DatabaseBackupSpecs(**db_specs)
-    
+
     bt = BackupTrimmer(db_backup_specs)
     bt.run_trimmer()
 
+"""
+from trim_backups import *
+from my_db_specs import db_specs
+db_backup_specs = DatabaseBackupSpecs(**db_specs)
 
+bt = BackupTrimmer(db_backup_specs)
+bt.make_test_directories()
+"""
 
 
 
