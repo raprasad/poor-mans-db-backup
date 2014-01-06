@@ -14,10 +14,10 @@ class DatabaseBackupSpecs:
     
     def __init__(self, **kwargs):
         # Load attribute names
-        print kwargs
+        #print kwargs
         for attr_name, default_val in self.attr_names_defaults.iteritems():
             kwarg_val = kwargs.get(attr_name, default_val)
-            print attr_name, kwarg_val
+            #print attr_name, kwarg_val
             if kwarg_val is None:
                 raise Exception('DatabaseBackupSpecs: Value for "%s" not specified!' % attr_name)
             self.__dict__.update({ attr_name : kwarg_val })

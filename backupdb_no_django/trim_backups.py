@@ -12,6 +12,7 @@ from datetime import datetime, date, timedelta
 import smtplib
 from email.mime.text import MIMEText
 
+from backup_files import BackupMaker
 from db_backup_specs import DatabaseBackupSpecs
 
 class BackupTrimmer:
